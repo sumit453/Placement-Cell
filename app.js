@@ -9,6 +9,7 @@ import methodOverride from "method-override";
 import passport from "passport";
 import expressLayouts from "express-ejs-layouts";
 import csrf from "csurf";
+import MongoStore from "connect-mongo";
 
 import { connectDB } from "./src/config/db.js";
 import "./src/config/passport.js";
@@ -25,37 +26,55 @@ dotenv.config();
 
 const app = express();
 
+// Behind a proxy in production (e.g., Render, Heroku)
+app.set("trust proxy", 1);
+
 // Security and logging
 app.use(helmet());
 app.use(morgan("dev"));
 
-// View engine
+// View engine (EJS + layouts)
 app.set("view engine", "ejs");
 app.set("views", path.join(process.cwd(), "src", "views"));
-app.set("layout", "layout");
 app.use(expressLayouts);
+app.set("layout", "layout"); // default layout: src/views/layout.ejs
 
-// Static
+// Static files
 app.use("/public", express.static(path.join(process.cwd(), "public")));
 
-// Body parsing
+// Body parsing + method override
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 
-// Session + Passport
+// Session store in MongoDB (fixes MemoryStore warning)
+const mongoUrl =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/placement_cell";
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "change_me",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // requires HTTPS
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    },
+    store: MongoStore.create({
+      mongoUrl,
+      ttl: 14 * 24 * 60 * 60, // 14 days
+      autoRemove: "native",
+    }),
   })
 );
+
+// Flash messages + Passport
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-// CSRF
+// CSRF protection
 app.use(csrf());
 
 // Globals for views
@@ -76,12 +95,12 @@ app.use("/allocations", allocationRoutes);
 app.use("/export", exportRoutes);
 app.use("/jobs", jobsRoutes);
 
-// 404
+// 404 handler
 app.use((req, res) => {
-  res.status(404).render("404", { layout: "layout" });
+  res.status(404).render("404", { title: "Not Found" });
 });
 
-// Start server
+// Server start
 const PORT = process.env.PORT || 3000;
 
 connectDB()
