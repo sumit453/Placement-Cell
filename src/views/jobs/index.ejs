@@ -1,0 +1,24 @@
+<h1>External Jobs (India) — React/Node.js</h1>
+<p class="text-muted">
+  Minimal list fetched via server-side from public APIs. Links go to external
+  apply pages.
+</p>
+
+<div class="list-group">
+  <% if (!jobs || jobs.length === 0) { %>
+  <div class="text-muted">No jobs found right now. Try again later.</div>
+  <% } %> <% jobs.forEach(j => { %>
+  <a
+    href="<%= j.applyUrl %>"
+    target="_blank"
+    class="list-group-item list-group-item-action"
+  >
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1"><%= j.title %></h5>
+      <small class="text-muted"><%= j.source %></small>
+    </div>
+    <p class="mb-1"><strong><%= j.company %></strong></p>
+    <small class="text-muted"><%= j.location %></small>
+  </a>
+  <% }) %>
+</div>

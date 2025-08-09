@@ -1,0 +1,65 @@
+<h1><%= interview.company %> — <%= new Date(interview.date).toISOString().substring(0,10) %></h1>
+
+<h3 class="mt-4">Allocate Students</h3>
+<form method="post" action="/allocations/interview/<%= interview._id %>/allocate">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <div class="mb-3">
+    <label class="form-label">Select students</label>
+    <select class="form-select" name="studentIds[]" multiple size="8">
+      <% students.forEach(s => { %>
+        <option value="<%= s._id %>"><%= s.name %> — <%= s.rollNumber %> — <%= s.college %></option>
+      <% }) %>
+    </select>
+    <div class="form-text">Hold Ctrl/Cmd to select multiple</div>
+  </div>
+  <button class="btn btn-primary">Allocate</button>
+</form>
+
+<h3 class="mt-5">Allocated Students</h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Student</th>
+      <th>College</th>
+      <th>Status</th>
+      <th>DSA</th>
+      <th>WebD</th>
+      <th>React</th>
+      <th>Result</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (allocations.length === 0) { %>
+      <tr><td colspan="8" class="text-center text-muted">No students allocated</td></tr>
+    <% } %>
+    <% allocations.forEach(a => { %>
+      <tr>
+        <td><%= a.studentId?.name %></td>
+        <td><%= a.studentId?.college %></td>
+        <td><%= a.studentId?.status %></td>
+        <td><%= a.studentId?.scores?.dsa ?? '' %></td>
+        <td><%= a.studentId?.scores?.webd ?? '' %></td>
+        <td><%= a.studentId?.scores?.react ?? '' %></td>
+        <td>
+          <form method="post" action="/allocations/<%= a._id %>/result" class="d-flex gap-2">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <select class="form-select form-select-sm" name="result">
+              <option value="PASS" <%= a.result === 'PASS' ? 'selected' : '' %>>PASS</option>
+              <option value="FAIL" <%= a.result === 'FAIL' ? 'selected' : '' %>>FAIL</option>
+              <option value="On Hold" <%= a.result === 'On Hold' ? 'selected' : '' %>>On Hold</option>
+              <option value="Didn't Attempt" <%= a.result === "Didn't Attempt" ? 'selected' : '' %>>Didn&#39;t Attempt</option>
+            </select>
+            <button class="btn btn-sm btn-outline-primary">Save</button>
+          </form>
+        </td>
+        <td class="text-end">
+          <form method="post" action="/allocations/<%= a._id %>/delete" onsubmit="return confirm('Remove allocation?')">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn btn-sm btn-outline-danger">Remove</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>

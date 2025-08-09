@@ -1,0 +1,33 @@
+<div class="d-flex justify-content-between align-items-center">
+  <h1>Interviews</h1>
+  <a class="btn btn-success" href="/interviews/new">Create Interview</a>
+</div>
+
+<table class="table table-striped mt-3">
+  <thead>
+    <tr>
+      <th>Company</th>
+      <th>Date</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (interviews.length === 0) { %>
+    <tr>
+      <td colspan="3" class="text-center text-muted">No interviews created</td>
+    </tr>
+    <% } %> <% interviews.forEach(i => { %>
+    <tr>
+      <td><%= i.company %></td>
+      <td><%= new Date(i.date).toISOString().substring(0,10) %></td>
+      <td class="text-end">
+        <a
+          href="/interviews/<%= i._id %>"
+          class="btn btn-sm btn-outline-primary"
+          >Open</a
+        >
+      </td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>

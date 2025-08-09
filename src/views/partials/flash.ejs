@@ -1,0 +1,5 @@
+<% if (flashSuccess && flashSuccess.length) { %>
+<div class="alert alert-success"><%= flashSuccess.join('<br />') %></div>
+<% } %> <% if (flashError && flashError.length) { %>
+<div class="alert alert-danger"><%= flashError.join('<br />') %></div>
+<% } %>

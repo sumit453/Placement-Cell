@@ -1,0 +1,67 @@
+Dependencies
+node_modules/
+jspm_packages/
+bower_components/
+
+Logs and diagnostics
+logs/
+.log
+npm-debug.log
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+Coverage and test outputs
+coverage/
+.nyc_output/
+lib-cov/
+
+Build/output/temp
+dist/
+build/
+tmp/
+temp/
+.cache/
+
+Environment and secrets
+.env
+.env.*
+!.env.example
+
+OS files
+.DS_Store
+Thumbs.db
+
+Editor/IDE
+.vscode/
+.vscode/**
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/
+*.suo
+.ntvs
+*.njsproj
+*.sln
+
+Package manager caches
+.npm/
+.pnpm-store/
+.yarn/
+.yarn-cache/
+.yarnrc.yml
+
+TypeScript (if added later)
+*.tsbuildinfo
+
+PM2/process managers
+.pids
+logs/*.pid

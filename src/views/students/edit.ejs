@@ -1,0 +1,46 @@
+
+<h1>Edit Student</h1>
+<form method="post" action="/students/<%= student._id %>" class="mt-3">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Name</label>
+      <input class="form-control" name="name" value="<%= student.name %>" required />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Roll Number</label>
+      <input class="form-control" name="rollNumber" value="<%= student.rollNumber %>" required />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">College</label>
+      <input class="form-control" name="college" value="<%= student.college %>" required />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Batch</label>
+      <input class="form-control" name="batch" value="<%= student.batch %>" required />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Status</label>
+      <select class="form-select" name="status">
+        <option value="not_placed" <%= student.status==='not_placed'?'selected':'' %>>not_placed</option>
+        <option value="placed" <%= student.status==='placed'?'selected':'' %>>placed</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">DSA Final Score</label>
+      <input class="form-control" name="dsa" type="number" min="0" max="100" value="<%= student.scores?.dsa ?? 0 %>" />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">WebD Final Score</label>
+      <input class="form-control" name="webd" type="number" min="0" max="100" value="<%= student.scores?.webd ?? 0 %>" />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">React Final Score</label>
+      <input class="form-control" name="react" type="number" min="0" max="100" value="<%= student.scores?.react ?? 0 %>" />
+    </div>
+  </div>
+  <div class="mt-3">
+    <button class="btn btn-primary">Update</button>
+    <a class="btn btn-secondary" href="/students">Cancel</a>
+  </div>
+</form>
